@@ -8,7 +8,7 @@ def extract_data():
     url = s3.generate_presigned_url(
                     ClientMethod='get_object',
                     Params={'Bucket': bucket_name, 'Key': 'Training.zip'},
-                    ExpiresIn=20000  # URL expiration time in seconds (adjust as needed)
+                    ExpiresIn=7500  # URL expiration time in seconds (adjust as needed)
                 )
     print(url)
     return url
