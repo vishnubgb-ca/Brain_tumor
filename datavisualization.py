@@ -8,10 +8,19 @@ import random
 import os
 
 def visualise_image():
-    url = extract_data()
-    url_response = requests.get(url)
-    with zipfile.ZipFile(BytesIO(url_response.content)) as z:
-        z.extractall('.')
+    try:
+        url = extract_data()
+        url_response = requests.get(url)
+        url_response.raise_for_status()  # Raise an error for bad responses
+        with zipfile.ZipFile(BytesIO(url_response.content)) as z:
+            z.extractall('.')
+        print("Data extraction successful.")
+    except requests.exceptions.RequestException as e:
+        print("Error downloading data:", e)
+    except zipfile.BadZipFile:
+        print("The downloaded file is not a valid zip file.")
+    except Exception as e:
+        print("An unexpected error occurred:", e)
     glioma_tumor_images = os.listdir(os.path.join(os.getcwd(),"Training/glioma_tumor"))
     meningioma_tumor_images = os.listdir(os.path.join(os.getcwd(),"Training/meningioma_tumor"))
     no_tumor_images = os.listdir(os.path.join(os.getcwd(),"Training/meningioma_tumor"))
